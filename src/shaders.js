@@ -22,6 +22,7 @@ const game_fragment = frag`
         uniform float angle_dist;
         uniform float time;
         uniform float opacity;
+        uniform float sound;
 
         const mat3 sobelX = mat3(-1.0, 0.0, 1.0, -2.0, 0.0, 2.0, -1.0, 0.0, 1.0)/8.0;
         const mat3 sobelY = mat3(-1.0,-2.0,-1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 1.0)/8.0;
@@ -41,14 +42,14 @@ const game_fragment = frag`
         void main() {
             vec2 uv = vec2(1. - abs(vUv.x - 0.5) * 2., vUv.y);
 
-            vec4 origin_color = texture2D(texture0, uv);
+            vec4 origin_color = texture2D(texture0, uv + vec2(sin(sound), cos(sound)) / 10000.);
             
             vec2 wooUv = uv * (1. + dist * 0.02 * sin(10. * time + sin(uv) * cos(uv) * 20.));
             
-            vec3 sobel_color = (conv3x3(wooUv, sobelX) + conv3x3(wooUv, sobelY)) * 10.;
+            vec3 sobel_color = (conv3x3(wooUv, sobelX * sin(sound * uv.x) / 10.) + conv3x3(wooUv, sobelY * cos(sound * uv.y) / 10.)) * 10.;
 
-            float fade = smoothstep(0.05, 0.5, dist);
-            float opacity_fade = smoothstep(0., 0.05, diff_dist) + 0.5;
+            float fade = smoothstep(0.05, 0.5 , dist + normalize(sound) / 10.);
+            float opacity_fade = smoothstep(0., 0.5, diff_dist) + 0.5;
 
             vec3 frontcolor = mix(origin_color.xyz, sobel_color.xyz, fade + 0.15);
             
@@ -67,7 +68,7 @@ const game_fragment = frag`
 
             float front = 
                 (1. - smoothstep(0.45, 0.52 , vUv.x)) * 
-                (smoothstep(0., 0.05, vUv.x)) *
+                (smoothstep(0., 0.1, vUv.x)) *
                 polar *
                 (1. - angle_fade);
 
@@ -113,7 +114,8 @@ const editor_fragment = frag`
 
 
 
-const plane_vertex = vert`    
+const plane_vertex = vert`   
+    uniform float time;
     varying vec2 vUv;
     void main() {
     vUv = uv;
@@ -125,19 +127,46 @@ const plane_fragment_shader = frag`
     precision mediump float;
     precision mediump int;
 
-    uniform float time;
+    // uniform float time;
+    uniform float posz;
 
     varying vec2 vUv;
 
     void main() {
         vec3 color = vec3(0.);
-        vec2 uv = vUv * 10.;
+        vec2 uv = vUv * 10. - posz * 10.;
 
         float gridX = mod(uv.x, 1.) > .95 ? 1. : 0. ;
         float gridY = mod(uv.y, 1.) > .95 ? 1. : 0. ;
 
-        color += (gridX + gridY) * vec3(1., 0., 1.);
+        color += (gridX + gridY) * vec3(1., 0., 1.) / 10. ;
 
         gl_FragColor = vec4(color, 1.);
     }
+`;
+
+
+const sky_fragment = frag`
+    varying vec2 vUv;
+
+    uniform float sound;
+    uniform float time;
+
+    float circle(vec2 p, float r) {
+        return length(p) - pow(r, 2.);
+    }
+
+    mat2 rot(float a) { 
+        return mat2(cos(a), -sin(a), sin(a), cos(a));
+    }
+
+    void main() {
+        vec2 uv = vec2(fract(vUv.x), fract(vUv.y));
+        
+        vec3 color = cos(circle(sin(uv * sound / 10.), .1)) * vec3(uv.x, 0.,  uv.y) / 5.;
+        // vec3 color = vec3(uv.y, uv.x, 0.);
+
+        gl_FragColor = fract(uv.x - .25) < .5 ? vec4(color, 1. - uv.x): vec4(0.);
+    }
+
 `;

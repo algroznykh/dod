@@ -7,13 +7,10 @@ vid1.setAttribute("src", "media/vid/rocks.mp4");
 vid1.setAttribute("hidden", true);
 vid1.setAttribute("autoplay", true);
 vid1.setAttribute("loop", true);
-// vid1.setAttribute("muted", true);
-// console.log('vid1', vid1);
 document.body.appendChild(vid1);
 
 const video = document.getElementById( 'rocks' );
 video.muted = "muted";
-// video.setAttribute("muted", true);
 const vidtexture = new THREE.VideoTexture( video );
 
 

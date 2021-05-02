@@ -1,6 +1,6 @@
-const VELOCITY = 1.4;
+const VELOCITY = .7;
 const TENSION = 0.2;
-const TENSION_Z = 0.5;
+const TENSION_Z = 0.2;
 const TENSION_RELAX = 4;
 
 
@@ -26,7 +26,16 @@ function move(t, dt, state) {
 
 function game_update(t, dt, state) {
 
+    const data = state.analyser.getAverageFrequency();
+
+    state.sky.material.uniforms.sound.value = data;
+    state.sky.material.uniforms.time.value = data;
+
+
     let all_velocity = move(t, dt, state);
+
+    state.grid.material.uniforms.posz.value = Math.sin(state.vessel.position.z);
+    state.grid.material.uniforms.time.value = t;
 
     let vrpos = state.vrcontroller.position;
     state.asterisk.position.set(vrpos.x, vrpos.y, vrpos.z);
@@ -60,6 +69,7 @@ function game_update(t, dt, state) {
         near_item.visible = true;
         near_item.material.uniforms.dist.value = state.edit ? 0. : item.distance;
         near_item.material.uniforms.diff_dist.value = state.edit ? 1. : diff_distance;
+        near_item.material.uniforms.sound.value = data;
         // near_item.material.uniforms.opacity.value = state.edit ? state.scene_opacity : 1.;
 
         let near_lookat = (new THREE.Vector3(1, 0, 0)).applyEuler(near_item.rotation);
@@ -105,6 +115,7 @@ function game_update(t, dt, state) {
 function game_init(state) {
     state.scene.background = new THREE.Color('black');
 
+ 
     state.camera = new THREE.PerspectiveCamera(
         80, window.innerWidth / window.innerHeight, 0.1, 1000
     );
@@ -123,6 +134,9 @@ function game_init(state) {
         sound.setLoop(true);
         sound.play();
     });
+
+    const analyser = new THREE.AudioAnalyser( sound, 32 );
+    state.analyser = analyser;
 
 
     const light = new THREE.PointLight(0xffffff, 1, 100);
@@ -144,6 +158,7 @@ function game_init(state) {
     let uniforms = { 
         time: {value: 0.0},
         resolution: {value: [window.innerWidth, window.innerHeight]},
+        posz: {value: 0.0},
 
     };
     let grid_material = new THREE.ShaderMaterial({
@@ -157,7 +172,7 @@ function game_init(state) {
     const grid_geometry = new THREE.PlaneGeometry(9, 9, 9 );
     const grid = new THREE.Mesh(grid_geometry, grid_material);
     grid.rotation.x = - Math.PI / 2;
-    grid.position.set(0, -4, 0);
+    grid.position.set(0, -5, 0);
     state.grid = grid;
 
 
@@ -185,6 +200,7 @@ function game_init(state) {
             time: {value: 0.0},
             opacity: {value: 1.0},
             grid: {value: 0.0},
+            sound: {value: 0.0}
         };
 
         let sphere_fragment = EDIT_MODE ? editor_fragment : game_fragment;
@@ -221,8 +237,27 @@ function game_init(state) {
         sphere.position.y = MEDIA_MAP[name].position[1];
         sphere.position.z = MEDIA_MAP[name].position[2];
 
+        sphere.visible = false;
         state.scene.add(sphere);
     }); 
+
+    let sky = new THREE.Mesh(
+        new THREE.SphereGeometry(1, 120, 120), 
+        new THREE.ShaderMaterial({
+        uniforms: {
+            time: {value: 0.0},
+            resolution: {value: [window.innerWidth, window.innerHeight]},
+            sound: {value: 0.0}
+
+        },
+        vertexShader: sphere_vertex[0],
+        fragmentShader: sky_fragment[0],
+        side: THREE.BackSide}));
+
+    sky.scale.set(100, 100, 100);
+    sky.rotation.set(0. , 0. , Math.PI / 2.);
+    state.sky = sky;
+    state.scene.add(sky);
     
 
     state.up = 0;
@@ -249,7 +284,7 @@ function game_init(state) {
     state.controls = new THREE.PointerLockControls(state, document.body);
     state.controls.vessel().position.x = current_position.x;
     state.controls.vessel().position.y = current_position.y;
-    state.controls.vessel().position.z = current_position.z;
+    state.controls.vessel().position.z = current_position.z + 4;
 
     state.vrcontroller = null;
 
@@ -285,15 +320,14 @@ function game_init(state) {
     );
 
     
-    state.scene.add(asterisk);
+    // state.scene.add(asterisk);
     state.asterisk = asterisk;
 
+    
+
+
     state.direction = 1; // apparently webvr only supports one button
-
     state.scene.add(vessel);
-
-
-
     return state;
 }
 

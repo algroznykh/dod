@@ -6,7 +6,6 @@ let grabbed = false;
 
 function editor_update(t, dt, state) {
 
-    // Object.keys(state.panorama).forEach(name => {state.panorama[name].visible = true;});
 
     if (state.stationary_scene !== null || state.movable_scene !== null) {
   
@@ -25,11 +24,6 @@ function editor_update(t, dt, state) {
 
         new_panorama.material.uniforms.dist.value = 0.;
         new_panorama.material.uniforms.diff_dist.value = 1.;
-
-        // new_panorama.rotation.x = state.offset_x;
-        // new_panorama.rotation.y = state.offset_y;
-        // new_panorama.rotation.z = state.offset_z;
-        // new_panorama.updateMatrix(); 
 
         let forward_velocity = (state.forward - state.backward) * dt * VELOCITY;
         let right_velocity = (state.right - state.left) * dt * VELOCITY;    
