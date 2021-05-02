@@ -71,6 +71,18 @@ function app() {
         
     });
 
+
+    let vrcontroller = renderer.xr.getController( 0 );
+
+ 
+    vrcontroller.addEventListener( 'selectstart', () => {state.forward = 1;} );
+    vrcontroller.addEventListener( 'selectend',  () => {state.forward = 0;});
+
+    state.vrcontroller = vrcontroller;
+    state.vessel.add(vrcontroller); 
+    state.scene.add( vrcontroller );
+
+
     let gui_updater = [];
 
     gui.add(state, 'offset_x')
@@ -118,41 +130,10 @@ function app() {
         gui.add(state, "min_angle_distance")
     );
 
-    gui_updater.push(
-        gui.add(state, "vessel_position")
-    );
-
-    gui_updater.push(
-        gui.add(state, "camera_position")
-    );
-
-
 
     let time = 0;
     let prev_time = (+new Date());
-
-
-
-    
-    let vrcontroller = renderer.xr.getController( 0 );
-    state.scene.add( vrcontroller );
-    vrcontroller.addEventListener( 'selectstart', (event) => {state.forward = 1;} );
-
-    vrcontroller.addEventListener( 'selectend',  (event) => {state.forward = 0;});
-
-    vrcontroller.addEventListener( 'connected', ( event ) => { state.forward = 1;} );
-    vrcontroller.addEventListener( 'select', ( event ) => { state.forward = 1;} );
-    vrcontroller.addEventListener( 'squeeze', ( event ) => { state.forward = 1;} );
-    
-
-    state.vrcontroller = vrcontroller;
-    // state.forwar d = 1;
-    // debugger;
-
-    state.vessel.add(vrcontroller);
-    
-
-
+  
         
     function animate() {
     
