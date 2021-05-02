@@ -1,5 +1,8 @@
 const EDIT_MODE = false;
+
+
 let grabbed = false;
+
 
 function editor_update(t, dt, state) {
 
@@ -67,7 +70,6 @@ function editor_update(t, dt, state) {
             new_panorama.position.set(0, 0, -distance);
             new_panorama.rotation.set(0, 0, 0);
             // new_panorama.rotation.set(-state.camera.rotation.x, -state.camera.rotation.y, state.camera.rotation.z);
-
 
             new_panorama.updateMatrix();
       

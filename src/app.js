@@ -2,7 +2,10 @@ const renderer = new THREE.WebGLRenderer({alpha: false});
 
 function app() {
     const gui = new dat.GUI();
-    gui.hide();
+
+    if (!EDIT_MODE) {
+        gui.hide();
+    }
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);

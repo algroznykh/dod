@@ -28,26 +28,6 @@ const MEDIA_MAP =  {
         rotation: [0, 0, 0]
     },
 
-    "media/pano/volnolom.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
-
-    "media/pano/sunset1.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
-
-    "media/pano/beach.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
-
-    "media/pano/beach2.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
-
     "media/pano/beach3.jpg": {
         position: [0, 0, -5.209999999999996],
         rotation: [0, 0, 0]
@@ -68,15 +48,6 @@ const MEDIA_MAP =  {
         rotation: [0, 0, 0]
     },
 
-    "media/pano/end.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
-
-    "media/pano/forest.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
 
     "media/vid/rocks.mp4": {
         position: [0, 0, -4.230000000000004],
@@ -98,58 +69,13 @@ const MEDIA_MAP =  {
         rotation: [0, 0, 0]
     },
 
-    "media/pano/mayak.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
-
     "media/pano/moon.jpg": {
         position: [0, 0, -9.6814000000001],
         rotation: [0, 0, 0]
     },
 
-    "media/pano/volnolom3.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
-
-    "media/pano/volnolom2.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
-
-    "media/pano/tree.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
-
-    "media/pano/tower_inside.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
-
-    "media/pano/tower.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
-
-    "media/pano/sunset6.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
-
     "media/pano/sunset4.jpg": {
         position: [0, 0, -8.886200000000107],
-        rotation: [0, 0, 0]
-    },
-
-    "media/pano/sunset3.jpg": {
-        position: [0, 0, -15],
-        rotation: [0, 0, 0]
-    },
-
-    "media/pano/sunset2.jpg": {
-        position: [0, 0, -15],
         rotation: [0, 0, 0]
     },
 };
