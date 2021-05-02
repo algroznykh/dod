@@ -110,20 +110,20 @@ function game_init(state) {
     state.camera.position.set(0., 0., 0.);
     state.camera.rotation.order = 'XYZ';
 
-    // const listener = new THREE.AudioListener();
-    // state.camera.add(listener);
-    // state.sound = new THREE.PositionalAudio(listener);
-    // state.sound.panner.setPosition(0, 0, -1);
-    // state.sound.setRolloffFactor(10); 
-    // state.sound.setMaxDistance(0.1);
-    // state.sound.setDistanceModel("exponential");
+    const listener = new THREE.AudioListener();
+    state.camera.add(listener);
+    state.sound = new THREE.PositionalAudio(listener);
+    state.sound.panner.setPosition(0, 0, -1);
+    state.sound.setRolloffFactor(10); 
+    state.sound.setMaxDistance(0.1);
+    state.sound.setDistanceModel("exponential");
 
-    // const audioLoader = new THREE.AudioLoader();
-    // audioLoader.load( 'assets/sound.mp3', function(buffer) {
-    //     state.sound.setBuffer( buffer );
-    //     state.sound.setRefDistance(0.1);
-    //     // state.sound.play();
-    // });
+    const audioLoader = new THREE.AudioLoader();
+    audioLoader.load( 'media/tide_low.mp3', function(buffer) {
+        state.sound.setBuffer( buffer );
+        state.sound.setRefDistance(0.1);
+        state.sound.play();
+    });
 
 
     const light = new THREE.PointLight(0xffffff, 1, 100);
