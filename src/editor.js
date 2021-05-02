@@ -1,3 +1,4 @@
+const EDIT_MODE = false;
 let grabbed = false;
 
 function editor_update(t, dt, state) {

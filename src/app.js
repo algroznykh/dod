@@ -1,11 +1,8 @@
-const glsl = x => x;
-const vert = x => x;
-const frag = x => x;
-
 const renderer = new THREE.WebGLRenderer({alpha: false});
 
 function app() {
     const gui = new dat.GUI();
+    gui.hide();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
