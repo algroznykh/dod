@@ -1,4 +1,4 @@
-const EDIT_MODE = false;
+const EDIT_MODE = true;
 
 
 let grabbed = false;

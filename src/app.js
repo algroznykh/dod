@@ -119,17 +119,19 @@ function app() {
     );
 
 
-    // gui_updater.push(
-    //     gui.add(state, "camera_position")
-    // );
-
-    // gui_updater.push(
-    //     gui.add(state, "camera_rotation")
-    // );
-
-
     let time = 0;
     let prev_time = (+new Date());
+
+
+
+    
+    let vrcontroller = renderer.xr.getController( 0 );
+    vrcontroller.addEventListener( 'selectstart', () => {console.log('select start')} );
+    vrcontroller.addEventListener( 'selectend',  () => console.log('selectend'));
+    
+    state.scene.add( vrcontroller );
+    state.vrcontroller = vrcontroller;
+    
 
 
         

@@ -26,6 +26,10 @@ function game_update(t, dt, state) {
 
     let all_velocity = move(t, dt, state);
 
+    let vrpos = state.vrcontroller.position;
+    state.asterisk.position.set(vrpos.x, vrpos.y, vrpos.z - .5);
+    // console.log(state.asterisk.position);
+
     // state.camera_rotation = state.camera.rotation;
     // state.camera_position = state.camera.position;
 
@@ -238,20 +242,8 @@ function game_init(state) {
         state.scene.add(mesh);
         state.panorama[name] = mesh;
 
-        // torus knot with 6 pointy ends, like in symbol "*"
-        const radius =  3.4 / 50.;  
-        const tubeRadius =  1.6 / 50.;  
-        const radialSegments =  3;
-        const tubularSegments =  29;  
-        const p =  1;  
-        const q =  6; 
-        const asterisk_geometry = new THREE.TorusKnotGeometry(
-            radius, tubeRadius, tubularSegments, radialSegments, p, q);
-
         const sphere = new THREE.Mesh(
             new THREE.SphereGeometry(0.02, 32, 32),         
-            // asterisk_geometry,  1
-            // blue_material
             sphere_shader
         );
 
@@ -329,9 +321,10 @@ function game_init(state) {
     );
 
     
-    asterisk.position.set(0, 0, -2);
-    // state.camera.add(asterisk);
-    state.scene.add(state.camera);
+    state.scene.add(asterisk);
+
+    state.vrcontroller = null;
+    state.asterisk = asterisk;
 
 
     return state;
