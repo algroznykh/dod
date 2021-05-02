@@ -118,6 +118,15 @@ function app() {
         gui.add(state, "min_angle_distance")
     );
 
+    gui_updater.push(
+        gui.add(state, "vessel_position")
+    );
+
+    gui_updater.push(
+        gui.add(state, "camera_position")
+    );
+
+
 
     let time = 0;
     let prev_time = (+new Date());
@@ -126,11 +135,21 @@ function app() {
 
     
     let vrcontroller = renderer.xr.getController( 0 );
-    vrcontroller.addEventListener( 'selectstart', () => {console.log('select start')} );
-    vrcontroller.addEventListener( 'selectend',  () => console.log('selectend'));
-    
     state.scene.add( vrcontroller );
+    vrcontroller.addEventListener( 'selectstart', (event) => {state.forward = 1;} );
+
+    vrcontroller.addEventListener( 'selectend',  (event) => {state.forward = 0;});
+
+    vrcontroller.addEventListener( 'connected', ( event ) => { state.forward = 1;} );
+    vrcontroller.addEventListener( 'select', ( event ) => { state.forward = 1;} );
+    vrcontroller.addEventListener( 'squeeze', ( event ) => { state.forward = 1;} );
+    
+
     state.vrcontroller = vrcontroller;
+    // state.forwar d = 1;
+    // debugger;
+
+    state.vessel.add(vrcontroller);
     
 
 
@@ -154,9 +173,7 @@ function app() {
         renderer.render(state.scene, state.camera);
         gui_updater.forEach(x => x.updateDisplay());        
         
-    }
-    
-    // animate();
+    }    
 
     renderer.setAnimationLoop( animate ); 
 }
