@@ -251,8 +251,8 @@ function game_init(state) {
         const sphere = new THREE.Mesh(
             new THREE.SphereGeometry(0.02, 32, 32),         
             // asterisk_geometry,  1
-            blue_material
-            // new THREE.VideoTexture(video)
+            // blue_material
+            sphere_shader
         );
 
         sphere.position.x = MEDIA_MAP[name].position[0];
@@ -330,7 +330,7 @@ function game_init(state) {
 
     
     asterisk.position.set(0, 0, -2);
-    state.camera.add(asterisk);
+    // state.camera.add(asterisk);
     state.scene.add(state.camera);
 
 
