@@ -129,6 +129,8 @@ function app() {
 
     let time = 0;
     let prev_time = (+new Date());
+
+
         
     function animate() {
     
@@ -151,10 +153,15 @@ function app() {
         renderer.render(state.scene, state.camera);
         gui_updater.forEach(x => x.updateDisplay());
         
-        requestAnimationFrame(animate);   
+        // requestAnimationFrame(animate);
+        renderer.render( scene, camera );
+        
+        
     }
     
-    animate();
+    // animate();
+
+    renderer.setAnimationLoop( animate ); 
 }
     
 window.onload = app;
