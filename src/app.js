@@ -4,7 +4,7 @@ import { VRButton } from '../lib/vrbutton.js';
 const renderer = new THREE.WebGLRenderer({alpha: false});
 document.body.appendChild( VRButton.createButton( renderer ) );
 renderer.xr.enabled = true;
-this.renderer.xr.setReferenceSpaceType( 'local' );
+renderer.xr.setReferenceSpaceType( 'local' );
 
 
 function app() {
