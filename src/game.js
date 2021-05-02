@@ -31,8 +31,6 @@ function game_update(t, dt, state) {
     let vrpos = state.vrcontroller.position;
     state.asterisk.position.set(vrpos.x, vrpos.y, vrpos.z);
 
-    let camera_yaw = state.camera.clone().rotation.reorder("XZY").y;
-
     let distance_items = Object.keys(state.panorama)
     .map(name => ({name, value: state.panorama[name]}))
     .filter(item => (item.name !== state.movable_scene || !state.edit))
@@ -103,6 +101,7 @@ function game_update(t, dt, state) {
  
 }
 
+
 function game_init(state) {
     state.scene.background = new THREE.Color('black');
 
@@ -117,10 +116,6 @@ function game_init(state) {
     const listener = new THREE.AudioListener();
     state.camera.add(listener);
     const sound = new THREE.Audio(listener);
-    // state.sound.panner.setPosition(0, 0, -1);
-    // state.sound.setRolloffFactor(10); 
-    // state.sound.setMaxDistance(0.1);
-    // state.sound.setDistanceModel("exponential");
 
     const audioLoader = new THREE.AudioLoader();
     audioLoader.load( 'media/tide_low.mp3', function(buffer) {
@@ -143,8 +138,7 @@ function game_init(state) {
         color: 'blue',
         transparent: true,
         opacity: 0.3,
-    });
- 
+    }); 
 
 
     let uniforms = { 
@@ -160,48 +154,30 @@ function game_init(state) {
 
     });
 
-    const grid_geometry = new THREE.PlaneGeometry(2, 2, 2 );
+    const grid_geometry = new THREE.PlaneGeometry(9, 9, 9 );
     const grid = new THREE.Mesh(grid_geometry, grid_material);
     grid.rotation.x = - Math.PI / 2;
-    grid.position.set(0, 0, 0);
+    grid.position.set(0, -4, 0);
     state.grid = grid;
 
-    const size = 10;
-    const divisions = 1000;
 
     if (EDIT_MODE) {
-        const gridHelper = new THREE.GridHelper( size, divisions );
+        const gridHelper = new THREE.GridHelper( 10, 100 );
         state.scene.add( gridHelper );
     }
 
-    const video = document.getElementById( 'rocks' );
-    const vidtexture = new THREE.VideoTexture( video );
 
     state.panorama = {};
-
 
     // fixed panorama
     Object.keys(MEDIA_MAP).forEach(name => {
 
-        let texture = null;
         const loader = new THREE.TextureLoader();
         
-        if (name.endsWith('mp4')) {
-            texture = vidtexture;
-
-        }
-
-        else {
-            texture = loader.load(name);
-            
-        }
-
-        // console.log("texture, ", texture);
-
-
+        let texture = name.endsWith('mp4') ? vidtexture : loader.load(name);
+   
         let sphere_uniforms = {
             texture0: { type: "t", value: texture}, 
-            // texture0: { type: "t", value: vidtexture}, 
             resolution: {value: [window.innerWidth, window.innerHeight]},
             dist: {value: 1.0},
             diff_dist: {value: 1.0},
@@ -211,16 +187,11 @@ function game_init(state) {
             grid: {value: 0.0},
         };
 
-        let sphere_fragment = game_fragment;
-        if (EDIT_MODE) {
-            sphere_fragment = editor_fragment;
-        }
-        
+        let sphere_fragment = EDIT_MODE ? editor_fragment : game_fragment;
     
         const sphere_shader = new THREE.ShaderMaterial({
             uniforms: sphere_uniforms,
             vertexShader: sphere_vertex[0], //THREE.DefaultVertex,
-            // fragmentShader: editor_fragment[0],
             fragmentShader: sphere_fragment[0],
             side: THREE.BackSide,
             transparent: true,
@@ -251,8 +222,7 @@ function game_init(state) {
         sphere.position.z = MEDIA_MAP[name].position[2];
 
         state.scene.add(sphere);
-    });
-   
+    }); 
     
 
     state.up = 0;
@@ -262,16 +232,11 @@ function game_init(state) {
     state.forward = 0;
     state.backward = 0;
 
-    state.offset_x = 0;
-    state.offset_y = 0;
-    state.offset_z = 0;
-
     state.min_distance = 0.1;
     state.min_angle_distance = 0.1;
     
     state.current_scene = START_SCENE;
     let current_position = state.panorama[state.current_scene].position;
-
 
     const vessel = new THREE.Group();
     vessel.add(state.camera);
@@ -286,9 +251,9 @@ function game_init(state) {
     state.controls.vessel().position.y = current_position.y;
     state.controls.vessel().position.z = current_position.z;
 
+    state.vrcontroller = null;
 
 
-         
     state.edit = false;
     state.move_scene = false;
     state.rotate_scene = false;
@@ -313,7 +278,6 @@ function game_init(state) {
         radius, tubeRadius, tubularSegments, radialSegments, p, q);
 
 
-
     const asterisk = new THREE.Mesh(
     //   new THREE.SphereGeometry(0.02, 32, 32),         
         asterisk_geometry,  
@@ -322,12 +286,7 @@ function game_init(state) {
 
     
     state.scene.add(asterisk);
-
-    state.vrcontroller = null;
     state.asterisk = asterisk;
-    state.move_forward = false;
-    state.vessel_position = JSON.stringify(vessel.position);
-    state.camera_position = state.vessel_position;
 
     state.direction = 1; // apparently webvr only supports one button
 
@@ -394,7 +353,7 @@ function game_handle_key(code, is_press, state) {
 
     }   
     
-    if(code == "KeyP" && is_press) {
+    if(code == "KeyP" && is_press && EDIT_MODE) {
         debugger;
 
     }  

@@ -85,16 +85,6 @@ function app() {
 
     let gui_updater = [];
 
-    gui.add(state, 'offset_x')
-        .min(-Math.PI / 4.).max(Math.PI / 4.).step(0.0001)
-        .listen().onChange(value => state.offset_x = value);
-    gui.add(state, 'offset_y')
-        .min(-Math.PI / 4.).max(Math.PI / 4.).step(0.0001)
-        .listen().onChange(value => state.offset_y = value);
-    gui.add(state, 'offset_z')
-        .min(-Math.PI / 4.).max(Math.PI / 4.).step(0.0001)
-        .listen().onChange(value => state.offset_z = value);
-    
     gui_updater.push(
         gui.add(state, "min_distance")
     );
