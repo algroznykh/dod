@@ -47,7 +47,7 @@ function game_update(t, dt, state) {
             Math.pow(item.value.position.y - state.vessel.position.y, 2) +
             Math.pow(item.value.position.z - state.vessel.position.z, 2);
 
-        let angle_distance = Math.pow(camera_yaw - item.value.clone().rotation.reorder("XZY").y, 2);
+        // let angle_distance = Math.pow(camera_yaw - item.value.clone().rotation.reorder("XZY").y, 2);
         // distance += angle_distance / 300.;
 
         return {name: item.name, distance};
@@ -117,19 +117,21 @@ function game_init(state) {
     state.camera.position.set(0., 0., 0.);
     state.camera.rotation.order = 'XYZ';
 
+
+    // audio 
     const listener = new THREE.AudioListener();
     state.camera.add(listener);
-    state.sound = new THREE.PositionalAudio(listener);
-    state.sound.panner.setPosition(0, 0, -1);
-    state.sound.setRolloffFactor(10); 
-    state.sound.setMaxDistance(0.1);
-    state.sound.setDistanceModel("exponential");
+    const sound = new THREE.Audio(listener);
+    // state.sound.panner.setPosition(0, 0, -1);
+    // state.sound.setRolloffFactor(10); 
+    // state.sound.setMaxDistance(0.1);
+    // state.sound.setDistanceModel("exponential");
 
     const audioLoader = new THREE.AudioLoader();
     audioLoader.load( 'media/tide_low.mp3', function(buffer) {
-        state.sound.setBuffer( buffer );
-        state.sound.setRefDistance(0.1);
-        state.sound.play();
+        sound.setBuffer( buffer );
+        sound.setLoop(true);
+        sound.play();
     });
 
 
@@ -149,26 +151,25 @@ function game_init(state) {
     });
  
 
- 
-   
-        let uniforms = { 
-            time: {value: 0.0},
-            resolution: {value: [window.innerWidth, window.innerHeight]},
 
-        };
-        let grid_material = new THREE.ShaderMaterial({
-            uniforms,
-            vertexShader: plane_vertex[0], 
-            fragmentShader: plane_fragment_shader[0],
-            side: THREE.DoubleSide
+    let uniforms = { 
+        time: {value: 0.0},
+        resolution: {value: [window.innerWidth, window.innerHeight]},
 
-        });
+    };
+    let grid_material = new THREE.ShaderMaterial({
+        uniforms,
+        vertexShader: plane_vertex[0], 
+        fragmentShader: plane_fragment_shader[0],
+        side: THREE.DoubleSide
 
-        const grid_geometry = new THREE.PlaneGeometry(2, 2, 2 );
-        const grid = new THREE.Mesh(grid_geometry, grid_material);
-        grid.rotation.x = - Math.PI / 2;
-        state.scene.add(grid);
-        state.grid = grid;
+    });
+
+    const grid_geometry = new THREE.PlaneGeometry(2, 2, 2 );
+    const grid = new THREE.Mesh(grid_geometry, grid_material);
+    grid.rotation.x = - Math.PI / 2;
+    grid.position.set(0, 0, 0);
+    state.grid = grid;
 
     const size = 10;
     const divisions = 1000;
@@ -256,8 +257,6 @@ function game_init(state) {
 
         state.scene.add(sphere);
     });
-
-
    
     
 
@@ -281,7 +280,10 @@ function game_init(state) {
 
     const vessel = new THREE.Group();
     vessel.add(state.camera);
+    vessel.add(grid);
+
     state.vessel = vessel;
+
 
     // controller 
     state.controls = new THREE.PointerLockControls(state.vessel, document.body);
@@ -331,8 +333,8 @@ function game_init(state) {
     state.move_forward = false;
     state.vessel_position = JSON.stringify(vessel.position);
     state.camera_position = state.vessel_position;
-    // debugger;
 
+    state.scene.add(vessel);
 
 
 
