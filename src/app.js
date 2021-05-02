@@ -154,7 +154,6 @@ function app() {
         gui_updater.forEach(x => x.updateDisplay());
         
         // requestAnimationFrame(animate);
-        renderer.render( scene, camera );
         
         
     }
