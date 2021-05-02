@@ -4,6 +4,7 @@ import { VRButton } from '../lib/vrbutton.js';
 const renderer = new THREE.WebGLRenderer({alpha: false});
 document.body.appendChild( VRButton.createButton( renderer ) );
 renderer.xr.enabled = true;
+this.renderer.xr.setReferenceSpaceType( 'local' );
 
 
 function app() {
@@ -147,14 +148,9 @@ function app() {
             game_update(time, dt, state);
         }
                 
-        // renderer.setRenderTarget(null);
-        // state.camera.updateProjectionMatrix();
-        // console.log(state.camera);
+
         renderer.render(state.scene, state.camera);
-        gui_updater.forEach(x => x.updateDisplay());
-        
-        // requestAnimationFrame(animate);
-        
+        gui_updater.forEach(x => x.updateDisplay());        
         
     }
     
